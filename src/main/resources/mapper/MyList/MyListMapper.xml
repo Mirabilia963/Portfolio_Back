@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="today.whatdo.festival.festivalinfo.mapper.MyListMapper">
+	<sql id="myListCols">
+		ML.ML_NUM, ML.ML_DATE, ML.UI_NUM, ML.FI_NUM
+	</sql>
+	<select id="selectMyLists" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO">
+		SELECT
+		<include refid="myListCols"></include>, FI.*
+		FROM MY_LIST ML
+		<!-- 유저 번호 받아오기 -->
+		INNER JOIN USER_INFO UI ON ML.UI_NUM = UI.UI_NUM
+		<!-- 축제 번호 받아오기 -->
+		INNER JOIN FESTIVAL_INFORMATION FI ON ML.FI_NUM = FI.FI_NUM
+		<!-- 유저 번호 찾기 -->
+		WHERE ML.UI_NUM=#{uiNum}
+		<!-- 추가한 번호순으로 정렬 -->
+		ORDER BY ML.ML_NUM ASC
+	</select>
+	<insert id="insertMyList" parameterType="today.whatdo.festival.festivalinfo.vo.mylist.MyListVO">
+		INSERT INTO MY_LIST(
+		ML_DATE, UI_NUM, FI_NUM
+		)
+		VALUES(
+		DATE_FORMAT(NOW(),'%Y%m%d'),#{uiNum},#{fiNum}
+		)
+	</insert>
+	<delete id="deleteMyList">
+		DELETE FROM MY_LIST WHERE FI_NUM=#{fiNum}
+	</delete>
+	<delete id="deleteMyLists">
+		DELETE FROM MY_LIST WHERE
+			<if test='mlNums != null and mlNums.size != 0'>
+				<foreach collection="mlNums" item="mlNum" separator="OR">
+					ML_NUM = #{mlNum}
+				</foreach>
+			</if>
+	</delete>
+</mapper>

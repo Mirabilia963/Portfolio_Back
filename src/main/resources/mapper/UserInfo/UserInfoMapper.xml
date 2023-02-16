@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="today.whatdo.festival.userinfo.mapper.UserInfoMapper">
+	<sql id="userInfoCols">
+		UI_NUM, UI_ID, UI_NAME, UI_NICKNAME, UI_PWD, UI_CREDAT
+	</sql>
+	<select id="selectUserInfoList"	resultType="today.whatdo.festival.userinfo.vo.UserInfoVO">
+		SELECT
+		<include refid="userInfoCols"></include>
+		FROM USER_INFO
+	</select>
+	<!-- 카카오 로그인 코드 받아오기 -->
+	<select id="selectUserInfoByKakaoId" resultType="today.whatdo.festival.userinfo.vo.UserInfoVO">
+		SELECT
+		UI_ID
+		FROM USER_INFO
+		WHERE UI_ID=#{uiId}
+	</select>
+	<select id="selectUserInfoByIdAndPwd" resultType="today.whatdo.festival.userinfo.vo.UserInfoVO">
+		SELECT
+		<include refid="userInfoCols"></include>
+		FROM USER_INFO
+		WHERE UI_ID = #{uiId}
+		AND UI_PWD = #{uiPwd}
+	</select>
+	<select id="selectUserInfoByUiId" resultType="today.whatdo.festival.userinfo.vo.UserInfoVO">
+		SELECT
+		<include refid="userInfoCols"></include>
+		FROM USER_INFO
+		WHERE UI_ID = #{uiId}
+	</select>
+	<select id="selectUserInfoByNickName" resultType="today.whatdo.festival.userinfo.vo.UserInfoVO">
+		SELECT
+		<include refid="userInfoCols"></include>
+		FROM USER_INFO
+		WHERE UI_NICKNAME = #{uiNickname}
+	</select>
+	<select id="selectUserInfo"	resultType="today.whatdo.festival.userinfo.vo.UserInfoVO">
+		SELECT
+		<include refid="userInfoCols"></include>
+		FROM USER_INFO
+		WHERE UI_NUM=#{uiNum}
+	</select>
+	<insert id="insertUserInfo">
+		INSERT INTO USER_INFO(
+		UI_ID,
+		UI_NAME, UI_NICKNAME, 
+		UI_PWD, UI_CREDAT
+		)
+		VALUES(
+		#{uiId},
+		#{uiName},#{uiNickname},
+		#{uiPwd},DATE_FORMAT(NOW(),'%Y%m%d')
+		)
+	</insert>
+	<update id="updateUserInfo">
+		UPDATE USER_INFO
+		SET UI_NAME=#{uiName},
+		UI_NICKNAME=#{uiNickname}
+		WHERE UI_NUM=#{uiNum}
+	</update>
+	<delete id="deleteUserInfo">
+		DELETE FROM USER_INFO 
+		WHERE UI_NUM=#{uiNum}
+	</delete>
+</mapper>

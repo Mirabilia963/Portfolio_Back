@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="today.whatdo.festival.festivalinfo.mapper.CommentMapper">
+	
+	<!-- 댓글 갯수 -->
+  	 <select id="commentCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM COMMENT_INFO
+    </select>
+    
+    <!-- 댓글 리스트 -->
+    <select id="commentList" resultType="today.whatdo.festival.festivalinfo.vo.commentInfo.CommentVO">
+        SELECT
+            *
+        FROM COMMENT_INFO
+    </select>
+	
+	<!-- 댓글 등록 -->
+	<insert id="commentInsert" parameterType="today.whatdo.festival.festivalinfo.vo.commentInfo.CommentVO">
+        INSERT INTO
+        COMMENT_INFO (CI_CONTENT, CI_WRITER, FI_NUM)
+        VALUES(#{ciContent},#{ciWriter},#{fiNum}) 
+    </insert>
+    
+    <!-- 댓글 수정 -->
+    <update id="commentUpdate" parameterType="today.whatdo.festival.festivalinfo.vo.commentInfo.CommentVO">
+        UPDATE COMMENT_INFO
+            SET
+            CI_CONTENT = #{ciContent}
+        WHERE CI_NUM = #{ciNum}
+    </update>
+
+	<!-- 댓글 삭제 -->
+	<delete id="commentDelete" parameterType="int">
+        DELETE FROM COMMENT_INFO WHERE CI_NUM = #{ciNum}
+    </delete>
+</mapper>

@@ -1,0 +1,33 @@
+JSP,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+}
+
+small {
+    font-size: 0.7em;
+}
+
+.whatdoLogo {
+   padding-bottom: 40px;
+}
+
+.whatdo {
+   font-family: 'NanumPen';
+   color : #fd70a8;
+   font-size : 38px;
+   font-weight: 200;
+   text-decoration: none;
+}

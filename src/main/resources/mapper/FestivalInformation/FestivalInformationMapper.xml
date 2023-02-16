@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="today.whatdo.festival.festivalinfo.mapper.FestivalInformationMapper">
+	<sql id="festivalInformationColumns">
+		ADDR1, ADDR2, AREACODE, BOOKTOUR, CAT1,
+		CAT2, CAT3, CONTENTID, CONTENTTYPEID, CREATEDTIME,
+		EVENTSTARTDATE, EVENTENDDATE, FIRSTIMAGE, FIRSTIMAGE2, MAPX,
+		MAPY, MLEVEL, MODIFIEDTIME, READCOUNT, SIGUNGUCODE,
+		TEL, TITLE
+	</sql>
+	<insert id="insertFestivalInformations">
+		INSERT INTO FESTIVAL_INFORMATION(
+		<include refid="festivalInformationColumns"></include>
+		)
+		VALUES
+		<foreach collection="festivalInfoList" item="FesInfo" separator=",">
+				(
+					#{FesInfo.addr1},#{FesInfo.addr2},#{FesInfo.areacode},#{FesInfo.booktour},#{FesInfo.cat1},
+					#{FesInfo.cat2},#{FesInfo.cat3},#{FesInfo.contentid},#{FesInfo.contenttypeid},#{FesInfo.createdtime},
+					#{FesInfo.eventstartdate},#{FesInfo.eventenddate},#{FesInfo.firstimage},#{FesInfo.firstimage2},#{FesInfo.mapx},
+					#{FesInfo.mapy},#{FesInfo.mlevel},#{FesInfo.modifiedtime},#{FesInfo.readcount},#{FesInfo.sigungucode},
+					#{FesInfo.tel},#{FesInfo.title}
+				)
+			</foreach>
+	</insert>
+	<insert id="insertFestivalInformation">
+		INSERT INTO FESTIVAL_INFORMATION(
+		<include refid="festivalInformationColumns"></include>
+		)
+		VALUES
+		(
+			#{addr1},#{addr2},#{areacode},#{booktour},#{cat1},
+			#{cat2},#{cat3},#{contentid},#{contenttypeid},#{createdtime},
+			#{eventstartdate},#{eventenddate},#{firstimage},#{firstimage2},#{mapx},
+			#{mapy},#{mlevel},#{modifiedtime},#{readcount},#{sigungucode},
+			#{tel},#{title}
+		)
+	</insert>
+	<select id="selectFestivalInformation" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO">
+		SELECT FI_NUM,
+		<include refid="festivalInformationColumns"></include>
+		FROM FESTIVAL_INFORMATION
+		WHERE CONTENTID = #{contentid}
+	</select>
+	<select id="selectFestivalInformationByNum" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO">
+		SELECT FI_NUM,
+		<include refid="festivalInformationColumns"></include>
+		FROM FESTIVAL_INFORMATION
+		WHERE FI_NUM = #{fiNum}
+	</select>
+	<select id="selectFestivalInformationByReadcount" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO">
+		SELECT FI_NUM,
+		<include refid="festivalInformationColumns"></include>
+		FROM FESTIVAL_INFORMATION
+		WHERE EVENTENDDATE >= DATE_FORMAT(NOW(),'%Y%m%D')
+		ORDER BY CAST(READCOUNT AS SIGNED) DESC
+		LIMIT 0,10
+	</select>
+	<select id="selectFestivalInformationLists" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO" parameterType="today.whatdo.festival.festivalinfo.vo.festivalInfo.SearchParameterVO">
+		SELECT FI_NUM,
+		<include refid="festivalInformationColumns"></include>
+		FROM FESTIVAL_INFORMATION
+		<where>
+			<if test='fesMonth!="" and fesMonth!=null'>
+				AND LEFT(EVENTENDDATE,6) >= CONCAT(DATE_FORMAT(NOW(), '%Y'),#{fesMonth})
+				AND CONCAT(DATE_FORMAT(NOW(), '%Y'),#{fesMonth}) >= LEFT(EVENTSTARTDATE,6)
+			</if>
+			<if test='fesLocal!="" and fesLocal!=null'>
+				AND ADDR1 LIKE CONCAT(#{fesLocal},'%')
+			</if>
+			<if test='fesTitle!="" and fesTitle!=null'>
+				AND TITLE LIKE CONCAT('%',#{fesTitle},'%')
+			</if>
+				AND EVENTENDDATE >= DATE_FORMAT(NOW(), '%Y%m%d')
+		</where>
+		ORDER BY EVENTSTARTDATE ASC
+	</select>
+	<select id="selectFinishedInformationLists" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO" parameterType="today.whatdo.festival.festivalinfo.vo.festivalInfo.SearchParameterVO">
+		SELECT FI_NUM,
+		<include refid="festivalInformationColumns"></include>
+		FROM FESTIVAL_INFORMATION
+		<where>
+			<if test='fesMonth!="" and fesMonth!=null'>
+				((substring(EVENTENDDATE,5,2) >= #{fesMonth}
+				AND  #{fesMonth}>= substring(EVENTSTARTDATE,5,2))
+				OR (substring(EVENTENDDATE,5,2) >= #{fesMonth}
+				AND LEFT(EVENTENDDATE,4) - LEFT(EVENTSTARTDATE,4) >=1))
+			</if>
+			<if test='fesLocal!="" and fesLocal!=null'>
+				AND ADDR1 LIKE CONCAT(#{fesLocal},'%')
+			</if>
+			<if test='fesTitle!="" and fesTitle!=null'>
+				AND TITLE LIKE CONCAT('%',#{fesTitle},'%')
+			</if>
+			AND DATE_FORMAT(NOW(), '%Y%m%d') > EVENTENDDATE
+		</where>
+		ORDER BY EVENTENDDATE DESC
+	</select>
+	<select id="selectMostLikedfestivalLists" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO" parameterType="today.whatdo.festival.festivalinfo.vo.festivalInfo.SearchParameterVO">
+		
+	 SELECT COUNT(LI.FI_NUM) AS LIKECNT,
+      F.*
+      FROM FESTIVAL_INFORMATION AS F
+      LEFT JOIN LIKE_INFO LI ON F.FI_NUM = LI.FI_NUM
+      GROUP BY F.FI_NUM
+      HAVING LIKECNT > 0
+      AND EVENTENDDATE >  DATE_FORMAT(NOW(), '%Y%m%d')  
+      ORDER BY LIKECNT DESC
+     
+		
+		
+	</select>
+	<select id="selectFestivalInformationBySearch" resultType="today.whatdo.festival.festivalinfo.vo.festivalInfo.FestivalInformationVO" parameterType="today.whatdo.festival.festivalinfo.vo.festivalInfo.SearchParameterVO">
+		SELECT FI_NUM,
+		<include refid="festivalInformationColumns"></include>
+		FROM FESTIVAL_INFORMATION 
+		WHERE TITLE LIKE CONCAT('%',#{fesTitle},'%')
+		   OR ADDR1 LIKE CONCAT('%',#{fesTitle},'%')
+		ORDER BY EVENTENDDATE DESC
+	</select>
+	<update id="updateFestivalInformation">
+		UPDATE FESTIVAL_INFORMATION
+		SET
+		ADDR1 = #{addr1}, ADDR2 = #{addr2}, AREACODE = #{areacode}, BOOKTOUR = #{booktour},
+		CAT1 = #{cat1}, CAT2 = #{cat2}, CAT3 = #{cat3}, CONTENTID = #{contentid},
+		CONTENTTYPEID = #{contenttypeid}, CREATEDTIME = #{createdtime}, EVENTSTARTDATE = #{eventstartdate}, EVENTENDDATE = #{eventenddate},
+		FIRSTIMAGE = #{firstimage}, FIRSTIMAGE2 = #{firstimage2}, MAPX = #{mapx}, MAPY = #{mapy},
+		MLEVEL = #{mlevel}, MODIFIEDTIME = #{modifiedtime}, READCOUNT = #{readcount}, SIGUNGUCODE = #{sigungucode},
+		TEL = #{tel}, TITLE = #{title}
+		WHERE FI_NUM = #{fiNum}
+	</update>
+</mapper>

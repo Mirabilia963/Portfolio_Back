@@ -1,0 +1,24 @@
+th,
+td {
+    padding: 5px;
+    vertical-align: middle;
+}
+
+tr.table-active:hover {
+    background-color: #DADADA;
+    cursor: pointer;
+}
+
+ul.pagination {
+    padding-top: 10px;
+}
+
+li.page-item {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    font-weight: bold;
+}
+
+li.page-item:hover {
+    background-color: #0090c5;
+}

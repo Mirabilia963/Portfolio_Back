@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="today.whatdo.festival.festivalinfo.mapper.LikeInfoMapper">
+
+
+	<select id="likeCheck" resultType="today.whatdo.festival.festivalinfo.vo.likeInfo.LikeInfoVO"
+			parameterType="today.whatdo.festival.festivalinfo.vo.likeInfo.LikeInfoVO">
+		SELECT LI_NUM, UI_NUM, FI_NUM
+		FROM LIKE_INFO
+		<where>
+			AND UI_NUM = #{uiNum}
+			AND FI_NUM = #{fiNum};
+		</where>
+	</select>
+
+	<insert id="insertLike" parameterType="today.whatdo.festival.festivalinfo.vo.likeInfo.LikeInfoVO">
+		INSERT INTO LIKE_INFO(
+			UI_NUM, FI_NUM
+		)
+		VALUES (#{uiNum}, #{fiNum})
+	</insert>
+	
+	<delete id="deleteLike" parameterType="today.whatdo.festival.festivalinfo.vo.likeInfo.LikeInfoVO" >
+		DELETE FROM LIKE_INFO 
+		<where>
+			AND UI_NUM = #{uiNum}
+			AND FI_NUM = #{fiNum}
+		</where>
+
+	</delete>
+	
+	<select id="getLikeCountByFiNum" resultType="Integer" parameterType="Integer">
+		SELECT count(LI_NUM)
+		FROM LIKE_INFO
+		<where>
+			AND FI_NUM = #{fiNum}
+		</where>
+	</select>
+	
+	<select id="getLikeState" resultType="today.whatdo.festival.festivalinfo.vo.likeInfo.LikeInfoVO"
+			parameterType="today.whatdo.festival.festivalinfo.vo.likeInfo.LikeInfoVO">
+
+		SELECT LI_NUM 
+		FROM LIKE_INFO
+		<where>
+			AND UI_NUM = #{uiNum}
+			AND FI_NUM = #{fiNum}
+		</where>
+	</select>
+
+</mapper>

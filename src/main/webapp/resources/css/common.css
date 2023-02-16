@@ -1,0 +1,50 @@
+header {
+    position: fixed;
+    z-index: 10000;
+    height: 90px;
+    top: 0;
+    width: 100%;
+}
+
+footer{
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 15px;
+}
+
+main {
+    padding-top: 90px;
+    padding-bottom: 10px;
+}
+
+@media(max-width:1200px){
+    header {
+    height: 90px;
+    font-size: 15px;
+	}
+	main {
+	    padding-top: 90px;
+	}
+	button{
+	    height:50px;
+	    width: 120px;
+	}
+}
+
+@media(max-width:991px){
+    header {
+    height: 105px;
+	}
+	main {
+	    padding-top: 105px;
+	}
+}
+	
+@media(max-width:767px){
+    header {
+    height: 130px;
+	}
+	main {
+	    padding-top: 130px;
+	}
+}
