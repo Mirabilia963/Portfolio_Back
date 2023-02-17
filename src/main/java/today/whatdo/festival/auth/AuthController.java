@@ -76,7 +76,7 @@ public class AuthController {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.add("grant_type", "authorization_code");
 		map.add("client_id", "175423f05591ec33e1712c6cdb8ee97b"); //REST API 키
-		map.add("redirect_uri", "http://whatdo.today/auth/oauth"); //EC2로 하면 도메인 또는 IP로 바꿀 것
+		map.add("redirect_uri", "https://whatdo.today/auth/oauth"); //EC2로 하면 도메인 또는 IP로 바꿀 것
 		map.add("code", code); //일회용 코드
 		log.info("code=>{}",code);
 		
